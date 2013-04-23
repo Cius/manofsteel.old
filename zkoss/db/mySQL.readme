@@ -1,0 +1,81 @@
+05/01/2011/sge the script are now updated for let hibernate working with sequences.
+03/17/2012/andyX
+
+Thanks to Andyx. 
+He makes the modifications that zksample2 runs with a mySQL 5.1 database.
+
+
+1. Create mySQL database "test_db"
+================================== 
+Project: Find the script in project: zkoss: /db
+File:    CreateTestTablesWithData_MySQL_5_1.sql( run these script in your mySQL admin tool )
+e.g. mysql -u root -p test_db < CreateTestTablesWithData_MySQL_5_1.sql
+
+2. Change key 'generator' in the hibernatemapping files with "native" 
+=====================================================================
+Project: spring-hibernate-backend: 
+Files:   src/main/resources/de/forsthaus/backend/model/
+(see sample code below)
+
+--> ApplicationNews.hbm.xml
+--> Article.hbm.xml
+--> Branche.hbm.xml
+--> CountryCode.hbm.xml
+--> Customer.hbm.xml
+--> GuestBook.hbm.xml
+--> HibernateEntityStatistics.hbm.xml
+--> HibernateStatistics.hbm.xml
+--> Ip2Country.hbm.xml
+--> Ip4Country.hbm.xml
+--> IpToCountry.hbm.xml
+--> MyCalendarEvent.hbm.xml
+--> Office.hbm.xml
+--> Order.hbm.xml
+--> Orderposition.hbm.xml
+--> SecGroup.hbm.xml
+--> SecGroupright.hbm.xml
+--> SecLoginlog.hbm.xml
+--> SecRight.hbm.xml
+--> SecRole.hbm.xml
+--> SecRolegroup.hbm.xml
+--> SecUser.hbm.xml
+--> SecUserrole.hbm.xml
+--> YoutubeLink.hbm.xml
+
+sample code for made the changes:
+---------------------------------
+OLD:
+	<id name="id" type="long"> <column name="art_id" /> 
+	    <generator class="assigned" /> 
+	</id>
+
+Change to:
+    <id name="id" type="long">
+		<column name="art_id" />
+		<generator class="native" />				
+		</generator>
+	</id>
+
+
+3. Stop initial H2 sampledata
+=========================================================
+Project: koss: src/main/resources/
+--> customize-applicationContext.xml line 35
+<!--
+	<bean class="de.forsthaus.h2.My_H2_SampleDataFiller">
+		<property name="dataSource" ref="dataSource">
+		</property>
+	</bean>
+-->
+
+4. Change configuration to use mysql
+====================================
+Project: spring-hibernate-backend: 
+Files:   src/test/resources/
+--> jdbc-properties
+
+Project: zkoss: src/main/resources/
+--> jdbc-properties
+
+
+
